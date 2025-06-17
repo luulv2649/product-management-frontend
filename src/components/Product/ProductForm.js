@@ -1,15 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { X, Save, RotateCcw } from 'lucide-react';
-import { useProductTypes } from '../../hooks/useProducts';
+import React, {useEffect, useState} from 'react';
+import {RotateCcw, Save, X} from 'lucide-react';
 
-const ProductForm = ({ 
-  isOpen, 
-  onClose, 
-  onSubmit, 
-  initialData = null, 
-  loading = false 
-}) => {
-  const { types } = useProductTypes();
+const ProductForm = ({
+                       isOpen,
+                       onClose,
+                       onSubmit,
+                       initialData = null,
+                       loading = false
+                     }) => {
+  // Sửa lỗi: Khai báo types như một mảng thông thường
+  const types = [
+    { value: 'FUJI', label: 'FUJI' },
+    { value: 'FUJI_SEARCH', label: 'FUJI_SEARCH' },
+    { value: 'MONORATO', label: 'MONORATO' },
+    { value: 'POPMART_GLOBAL', label: 'POPMART_GLOBAL' },
+    { value: 'YODOBASHI', label: 'YODOBASHI' },
+    { value: 'NOJIMA', label: 'NOJIMA' },
+    { value: 'KOJIMA', label: 'KOJIMA' },
+    { value: 'POPMART', label: 'POPMART' },
+    { value: 'RAKUTEN', label: 'RAKUTEN' },
+  ];
+
   const [formData, setFormData] = useState({
     url: '',
     type: '',
@@ -39,7 +50,7 @@ const ProductForm = ({
   const handleInputChange = (e) => {
     const { name, value, type } = e.target;
     const newValue = type === 'number' ? parseInt(value) : value;
-    
+
     setFormData(prev => ({
       ...prev,
       [name]: newValue,
@@ -85,7 +96,7 @@ const ProductForm = ({
   // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -111,111 +122,112 @@ const ProductForm = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2 className="modal-title">
-            {initialData ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới'}
-          </h2>
-          <button 
-            onClick={onClose} 
-            className="modal-close-button"
-            disabled={loading}
-          >
-            <X size={20} />
-          </button>
+      <div className="modal-overlay">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2 className="modal-title">
+              {initialData ? 'Cập nhật sản phẩm' : 'Thêm sản phẩm mới'}
+            </h2>
+            <button
+                onClick={onClose}
+                className="modal-close-button"
+                disabled={loading}
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          <form onSubmit={handleSubmit} className="product-form">
+            {/* URL Field */}
+            <div className="form-group">
+              <label htmlFor="url" className="form-label">
+                URL sản phẩm <span className="required">*</span>
+              </label>
+              <input
+                  type="url"
+                  id="url"
+                  name="url"
+                  value={formData.url}
+                  onChange={handleInputChange}
+                  className={`form-input ${errors.url ? 'error' : ''}`}
+                  placeholder="https://example.com/product"
+                  disabled={loading}
+              />
+              {errors.url && (
+                  <span className="error-message">{errors.url}</span>
+              )}
+            </div>
+
+            {/* Type Field */}
+            <div className="form-group">
+              <label htmlFor="type" className="form-label">
+                Loại sản phẩm <span className="required">*</span>
+              </label>
+              <select
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  className={`form-select ${errors.type ? 'error' : ''}`}
+                  disabled={loading}
+              >
+                <option value="">Chọn loại sản phẩm</option>
+                {/* Sửa lỗi: Sử dụng type.value và type.label thay vì chỉ type */}
+                {types.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                ))}
+              </select>
+              {errors.type && (
+                  <span className="error-message">{errors.type}</span>
+              )}
+            </div>
+
+            {/* Notification Field */}
+            <div className="form-group">
+              <label htmlFor="isNotify" className="form-label">
+                Trạng thái thông báo
+              </label>
+              <select
+                  id="isNotify"
+                  name="isNotify"
+                  value={formData.isNotify}
+                  onChange={handleInputChange}
+                  className="form-select"
+                  disabled={loading}
+              >
+                <option value={1}>Bật thông báo</option>
+                <option value={0}>Tắt thông báo</option>
+              </select>
+            </div>
+
+            {/* Form Actions */}
+            <div className="form-actions">
+              <button
+                  type="button"
+                  onClick={handleReset}
+                  className="btn btn-secondary"
+                  disabled={loading}
+              >
+                <RotateCcw size={16} />
+                Đặt lại
+              </button>
+              <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+              >
+                <Save size={16} />
+                {loading
+                    ? (initialData ? 'Đang cập nhật...' : 'Đang thêm...')
+                    : (initialData ? 'Cập nhật' : 'Thêm mới')
+                }
+              </button>
+            </div>
+          </form>
         </div>
-
-        <form onSubmit={handleSubmit} className="product-form">
-          {/* URL Field */}
-          <div className="form-group">
-            <label htmlFor="url" className="form-label">
-              URL sản phẩm <span className="required">*</span>
-            </label>
-            <input
-              type="url"
-              id="url"
-              name="url"
-              value={formData.url}
-              onChange={handleInputChange}
-              className={`form-input ${errors.url ? 'error' : ''}`}
-              placeholder="https://example.com/product"
-              disabled={loading}
-            />
-            {errors.url && (
-              <span className="error-message">{errors.url}</span>
-            )}
-          </div>
-
-          {/* Type Field */}
-          <div className="form-group">
-            <label htmlFor="type" className="form-label">
-              Loại sản phẩm <span className="required">*</span>
-            </label>
-            <select
-              id="type"
-              name="type"
-              value={formData.type}
-              onChange={handleInputChange}
-              className={`form-select ${errors.type ? 'error' : ''}`}
-              disabled={loading}
-            >
-              <option value="">Chọn loại sản phẩm</option>
-              {types.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.type && (
-              <span className="error-message">{errors.type}</span>
-            )}
-          </div>
-
-          {/* Notification Field */}
-          <div className="form-group">
-            <label htmlFor="isNotify" className="form-label">
-              Trạng thái thông báo
-            </label>
-            <select
-              id="isNotify"
-              name="isNotify"
-              value={formData.isNotify}
-              onChange={handleInputChange}
-              className="form-select"
-              disabled={loading}
-            >
-              <option value={1}>Bật thông báo</option>
-              <option value={0}>Tắt thông báo</option>
-            </select>
-          </div>
-
-          {/* Form Actions */}
-          <div className="form-actions">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="btn btn-secondary"
-              disabled={loading}
-            >
-              <RotateCcw size={16} />
-              Đặt lại
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading}
-            >
-              <Save size={16} />
-              {loading 
-                ? (initialData ? 'Đang cập nhật...' : 'Đang thêm...') 
-                : (initialData ? 'Cập nhật' : 'Thêm mới')
-              }
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
   );
 };
 
