@@ -1,6 +1,5 @@
 import React from 'react';
 import { Filter, X, ChevronDown } from 'lucide-react';
-import { useProductTypes } from '../../hooks/useProducts';
 
 const ProductFilter = ({
                          filters,
@@ -26,14 +25,6 @@ const ProductFilter = ({
       ...filters,
       [key]: value === '' ? null : value,
       page: 0, // Reset to first page when filter changes
-    });
-  };
-
-  const handlePaginationChange = (key, value) => {
-    onPaginationChange({
-      ...pagination,
-      [key]: value,
-      page: 0, // Reset to first page when pagination settings change
     });
   };
 
@@ -102,7 +93,7 @@ const ProductFilter = ({
                     <option value="">Tất cả loại</option>
                     {types.map((type) => (
                         <option key={type.value} value={type.value}>
-                          {type}
+                          {type.label}
                         </option>
                     ))}
                   </select>
