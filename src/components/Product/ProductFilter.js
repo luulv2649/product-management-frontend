@@ -9,7 +9,17 @@ const ProductFilter = ({
                          pagination,
                          onPaginationChange
                        }) => {
-  const { types } = useProductTypes();
+  const types = [
+    { value: 'FUJI', label: 'FUJI' },
+    { value: 'FUJI_SEARCH', label: 'FUJI_SEARCH' },
+    { value: 'MONORATO', label: 'MONORATO' },
+    { value: 'POPMART_GLOBAL', label: 'POPMART_GLOBAL' },
+    { value: 'YODOBASHI', label: 'YODOBASHI' },
+    { value: 'NOJIMA', label: 'NOJIMA' },
+    { value: 'KOJIMA', label: 'KOJIMA' },
+    { value: 'POPMART', label: 'POPMART' },
+    { value: 'RAKUTEN', label: 'RAKUTEN' },
+  ];
 
   const handleFilterChange = (key, value) => {
     onFilterChange({
@@ -91,7 +101,7 @@ const ProductFilter = ({
                   >
                     <option value="">Tất cả loại</option>
                     {types.map((type) => (
-                        <option key={type} value={type}>
+                        <option key={type.key} value={type.key}>
                           {type}
                         </option>
                     ))}
