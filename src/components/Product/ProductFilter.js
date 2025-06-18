@@ -101,7 +101,7 @@ const ProductFilter = ({
                   >
                     <option value="">Tất cả loại</option>
                     {types.map((type) => (
-                        <option key={type.key} value={type.key}>
+                        <option key={type.value} value={type.value}>
                           {type}
                         </option>
                     ))}
