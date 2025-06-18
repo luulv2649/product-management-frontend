@@ -19,6 +19,7 @@ const ProductForm = ({
     { value: 'KOJIMA', label: 'KOJIMA' },
     { value: 'POPMART', label: 'POPMART' },
     { value: 'RAKUTEN', label: 'RAKUTEN' },
+    { value: 'BICCAMERA', label: 'BICCAMERA' },
   ];
 
   const [formData, setFormData] = useState({
